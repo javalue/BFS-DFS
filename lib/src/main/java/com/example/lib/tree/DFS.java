@@ -1,15 +1,13 @@
-package com.example.lib;
+package com.example.lib.tree;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.Stack;
 
 /**
  * @author tong.xu
  * @date 2020/4/24.
  * description：
  */
-public class BFS {
+public class DFS {
 
   //       0
   //    1      2
@@ -26,11 +24,6 @@ public class BFS {
   private static TreeNode A7 = new TreeNode(7);
   private static TreeNode A8 = new TreeNode(8);
 
-  /**
-   * 记录每个节点在第几层上
-   */
-  static HashMap<TreeNode, Integer> levelsMap = new HashMap<>();
-
   public static void main(String[] args) {
 
     root.left = A1;
@@ -45,28 +38,43 @@ public class BFS {
     A3.left = A7;
     A6.right = A8;
 
-    bfsQueue(root);
+    //dfs(root);
+
+    dfsStack(root);
   }
 
-  private static void bfsQueue(TreeNode root) {
-    Queue<TreeNode> queue = new LinkedList<>();
+  /**
+   * 递归
+   */
+  private static void dfs(TreeNode node) {
+    if (node == null) {
+      return;
+    }
 
-    queue.offer(root);
-    levelsMap.put(root, 0);
+    System.out.print(" - " + node.value);
 
-    while (!queue.isEmpty()) {
-      TreeNode node = queue.poll();
-      int level = levelsMap.get(node);
-      System.out.println(node.value + "- level:" + level);
+    dfs(node.left);
+    dfs(node.right);
+  }
 
-      if (node.left != null) {
-        queue.offer(node.left);
-        levelsMap.put(node.left, level + 1);
-      }
+  /**
+   * 用栈处理dfs
+   * @param root
+   */
+  private static void dfsStack(TreeNode root) {
+    Stack<TreeNode> stack = new Stack<>();
+    stack.push(root);
+
+    while (!stack.empty()) {
+      TreeNode node = stack.peek();
+      System.out.print(" - " + node.value);
+      stack.pop();
 
       if (node.right != null) {
-        queue.offer(node.right);
-        levelsMap.put(node.right, level + 1);
+        stack.push(node.right);
+      }
+      if (node.left != null) {
+        stack.push(node.left);
       }
     }
   }
